@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ category.name }} Sets – Quiz Platform{% endblock %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+    <div class="container mt-5">
+        <h2>{{ category.name }} Sets</h2>
+        <ul class="list-group">
+            {% for set in sets %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ set.name }}
+                    <a href="{% url 'start_test' set.slug %}" class="btn btn-sm btn-success">Start</a>
+                </li>
+            {% empty %}
+                <li class="list-group-item">No sets available for this category.</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Recycle Bin - Questions{% endblock %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+<form id="csrf-form" style="display:none;">
+    {% csrf_token %}
+</form>
+
+<div class="container mt-5">
+    <h3 class="text-center text-danger mb-4">Recycle Bin (Deleted Questions)</h3>
+
+    <div id="acknowledge" class="text-center mb-3"></div>
+
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Question</th>
+                <th>Category</th>
+                <th>Subject</th>
+                <th>Set</th>
+                <th>Created By</th>
+                <th>Restore</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for q in deleted_questions %}
+                <tr>
+                    <td>{{ q.question_text|truncatewords:8 }}</td>
+                    <td>{{ q.category.name }}</td>
+                    <td>{{ q.subject.name }}</td>
+                    <td>{{ q.set.name }}</td>
+                    <td>{{ q.user.username }}</td>
+                    <td>
+                        {% if q.user == user %}
+                            <button class="btn btn-success btn-sm restore-question-btn"
+                                    data-id="{{ q.id }}">
+                                Restore
+                            </button>
+                        {% else %}
+                            <span class="text-muted">Not allowed</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No deleted questions found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{%endblock%}

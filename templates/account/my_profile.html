@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+<div class="container mt-5">
+
+  <h2 class="text-center text-primary mb-4 fw-bold">My Profile</h2>
+
+  <div class="card shadow-lg border-primary">
+    <div class="card-header bg-primary text-white fw-bold">
+      Profile Information
+    </div>
+    <div class="card-body">
+
+      <!-- Username -->
+      <div class="row mb-3">
+        <div class="col-md-3 text-secondary fw-bold">Username:</div>
+        <div class="col-md-9">{{ profile.user.username }}</div>
+      </div>
+
+      <!-- Email -->
+      <div class="row mb-3">
+        <div class="col-md-3 text-secondary fw-bold">Email:</div>
+        <div class="col-md-9">{{ profile.user.email }}</div>
+      </div>
+
+      <!-- First Name -->
+      <div class="row mb-3">
+        <div class="col-md-3 text-secondary fw-bold">First Name:</div>
+        <div class="col-md-9">{{ profile.first_name|default:"-" }}</div>
+      </div>
+
+      <!-- Last Name -->
+      <div class="row mb-3">
+        <div class="col-md-3 text-secondary fw-bold">Last Name:</div>
+        <div class="col-md-9">{{ profile.last_name|default:"-" }}</div>
+      </div>
+
+      <!-- Gender -->
+      <div class="row mb-3">
+        <div class="col-md-3 text-secondary fw-bold">Gender:</div>
+        <div class="col-md-9">{{ profile.gender|default:"-" }}</div>
+      </div>
+
+      <!-- Date of Birth -->
+      <div class="row mb-3">
+        <div class="col-md-3 text-secondary fw-bold">Date of Birth:</div>
+        <div class="col-md-9">{{ profile.dob|default:"-" }}</div>
+      </div>
+
+      <!-- Phone -->
+      <div class="row mb-3">
+        <div class="col-md-3 text-secondary fw-bold">Phone:</div>
+        <div class="col-md-9">{{ profile.phone|default:"-" }}</div>
+      </div>
+
+      <!-- Structured Address with Labels -->
+      <!-- Structured Address with Labels, Multi-line -->
+      <div class="row mb-3">
+          <div class="col-md-3 text-secondary fw-bold">Address:</div>
+          <div class="col-md-9">
+              {% if profile.village or profile.city or profile.state or profile.postal_code %}
+                  {% if profile.village %}Village: {{ profile.village }},{% endif %}<br>
+                  {% if profile.city %}City: {{ profile.city }},{% endif %}<br>
+                  {% if profile.state %}State: {{ profile.state }},{% endif %}<br>
+                  {% if profile.postal_code %}PIN: {{ profile.postal_code }}{% endif %}
+              {% else %}
+                  -
+              {% endif %}
+          </div>
+      </div>
+
+
+      <!-- Buttons -->
+      <div class="d-flex justify-content-between mt-4">
+        <button class="btn btn-outline-primary fw-bold" onclick="window.history.back();">
+          ← Back
+        </button>
+        <a href="{% url 'edit_profile' %}" class="btn btn-success fw-bold">
+          <i class="bi bi-pencil-square"></i> Edit Profile
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

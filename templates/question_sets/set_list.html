@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+
+{% if user_role == "staff" %}
+<div class="container-fluid mt-4">
+    <h2 class="mb-4 text-center text-primary">Set List</h2>
+
+    {% if sets %}
+        <div class="table-responsive shadow rounded">
+            <table class="table table-bordered table-striped table-hover w-100 align-middle">
+                <thead class="table-primary text-center">
+                    <tr>
+                        <th scope="col">Set Name</th>
+                        <th scope="col">Department</th>
+                        <th scope="col">Subject</th>
+                        <th scope="col">Created By</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    {% for set in sets %}
+                    <tr>
+                        <td>{{ set.name }}</td>
+                        <td>{{ set.category.name }}</td>
+                        <td>{{ set.subject.name }}</td>
+                        <td>{{ set.user.username }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center">No sets available.</div>
+    {% endif %}
+</div>
+{% else %}
+<div class="alert alert-danger text-center mt-5">
+    <h4>Access Denied</h4>
+    <p>You are not authorized to view this page.</p>
+</div>
+{% endif %}
+{% endblock %}
+
+

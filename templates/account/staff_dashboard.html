@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}STAFF DASHBOARD{% endblock %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+<div class="container mt-5">
+    <div >
+        <div >
+            <h2 class="card-title text-primary mb-3">
+                👋 Welcome, <strong>{{ user.first_name }}</strong> <span class="text-muted">({{ user.role|title }})</span>
+            </h2>
+            <p class="card-text fs-5 text-blue">You are logged in as <strong>{{ user.username }}</strong></p>
+
+
+            <div class="mt-4 d-flex flex-wrap gap-3">
+                <a href="{% url 'add_category' %}" class="btn btn-success px-4">
+                    ➕ Add Category
+                </a>
+                <a href="{% url 'add_subject' %}" class="btn btn-info text-white px-4">
+                    📚 Add Subject
+                </a>
+                <a href="{% url 'add_set' %}" class="btn btn-info text-white px-4">
+                    Add Set
+                </a>
+                <form method="POST" action="{% url 'logout_view' %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger px-4">
+                        🚪 Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Recycle Bin{% endblock %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+
+<!-- ✅ Hidden form only for CSRF -->
+<form id="csrf-form" style="display:none;">
+    {% csrf_token %}
+</form>
+
+<div class="container mt-5">
+    <h3 class="text-center text-danger mb-4">Recycle Bin (All Deleted Subjects)</h3>
+
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Subject Name</th>
+                <th>Department</th>
+                <th>Created By</th>
+                <th>Restore</th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            {% for subject in subjects %}
+                <tr>
+                    <td>{{ subject.name }}</td>
+                    <td>{{ subject.category.name }}</td>
+                    <td>{{ subject.user.username }}</td>
+
+                    <td>
+                        {% if subject.user == user %}
+                            <button class="btn btn-success btn-sm restore-subject-btn"
+                                    data-id="{{ subject.id }}">
+                                Restore
+                            </button>
+                        {% else %}
+                            <span class="text-muted">Not allowed</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">No deleted subjects found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+

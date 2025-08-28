@@ -1,0 +1,11 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% include 'includes/navbar.html' %}
+<div class="container mt-5 text-center welcome-section">
+    <h2 class="welcome-heading">Welcome to the Test</h2>
+    <p class="welcome-text">Click the button below to begin your test.</p>
+    <a href="{% url 'take_test' %}" class="btn btn-primary mt-4">Start Test</a>
+</div>
+{% endblock %}

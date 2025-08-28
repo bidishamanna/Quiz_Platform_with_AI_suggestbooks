@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pay for {{ subject.name }} – Quiz Platform{% endblock %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow rounded">
+        <div class="card-body text-center">
+          <h3 class="card-title mb-4">📘 {{ subject.name }}</h3>
+          <p class="card-text text-muted">
+            Category: {{ subject.category.name }}<br>
+            Price: ₹{{ subject.price }}
+          </p>
+
+          <!-- Pay Now Button -->
+        <form id="payment-form">
+        {% csrf_token %}
+            <input type="hidden" id="subject_id" value="{{ subject.id }}">
+            <button class="btn btn-primary mt-3" id="pay-button">
+                💳 Pay Now ₹{{ subject.price }}
+            </button>
+        </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+

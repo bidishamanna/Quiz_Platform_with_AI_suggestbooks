@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include 'includes/navbar.html' %}
+<div class="container mt-5">
+  <h2 class="text-white">Take Test</h2>
+
+  <div id="quiz-area">
+    <div class="mb-4">
+      <h5 id="q-header" class="text-white">Question 1:</h5>
+      <p id="q-text" class="fs-5 text-white"></p>
+    </div>
+
+    <form id="answer-form">
+      {% csrf_token %}
+      <div id="options-container" class="text-white"></div>
+      <button type="submit" class="btn btn-primary mt-3">Submit Answer</button>
+    </form>
+  </div>
+
+  <div id="score-area" class="d-none text-white mt-4">
+    <h4>Quiz Completed!</h4>
+    <p>Total Questions: <span id="total-q"></span></p>
+    <p>Correct Answers: <span id="correct-q"></span></p>
+    <p>Wrong Answers: <span id="wrong-q"></span></p>
+    <a href="{% url 'home' %}" class="btn btn-success">Back to Home</a>
+  </div>
+</div>
+{% endblock %}
+
+

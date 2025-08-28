@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Login</h2>
+        </div>
+        <div class="card-body">
+            <!-- Activation or Token Messages -->
+            {% if request.GET.activated %}
+                <div class="alert alert-success">Your account has been activated. Please log in.</div>
+            {% elif request.GET.invalid_token %}
+                <div class="alert alert-danger">Invalid or expired activation link.</div>
+            {% endif %}
+            
+            <form id="login_form" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" name="username" id="username" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" id="password" class="form-control" required>
+                </div>
+                <button type="button" class="btn btn-primary w-100" id="login-btn">Login</button>
+            </form>
+
+            <a href="{% url 'forget_password' %}">Forgot Password?</a>
+
+            <div id="error_message" class="text-danger mt-3" style="display: none;"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold text-white" href="/">🏠 Home</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <ul class="navbar-nav ms-auto align-items-center">
+                {% if user.is_authenticated %}
+                    <li class="nav-item me-3">
+                        <span class="nav-link text-light">👤 Welcome, <strong>{{ user.username }}</strong></span>
+                    </li>
+
+                    {% if user.role == 'staff' %}
+                        <!-- Categories Dropdown -->
+                        <li class="nav-item dropdown me-3">
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">📁 Categories</a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'category_list' %}">📄 Category List</a></li>
+                                <li><a class="dropdown-item" href="{% url 'add_category' %}">➕ Create Category</a></li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'recycle_bin' %}">♻️ Category Recycle</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Subjects Dropdown -->
+                        <li class="nav-item dropdown me-3">
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">📘 Subjects</a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'subject_list' %}">📄 Subject List</a></li>
+                                <li><a class="dropdown-item" href="{% url 'add_subject' %}">➕ Create Subject</a></li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'subject_recycle_bin' %}">♻️ Subject Recycle</a></li>
+                            </ul>
+                        </li>
+                         <!-- Sets Dropdown -->
+                        <li class="nav-item dropdown me-3">
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">📘 Sets </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'set_list' %}">📄 Set List</a></li>
+                                <li><a class="dropdown-item" href="{% url 'add_set' %}">➕ Create Set</a></li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'set_recycle_bin' %}">♻️ Set Recycle</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="nav-item dropdown me-3">
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">Questions </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'add_question' %}">📄 Add Question</a></li>
+                                <li><a class="dropdown-item" href="{% url 'upload_questions' %}">📄 Add Question with File</a></li>
+                                <li><a class="dropdown-item" href="{% url 'question_list' %}">📄Question list</a></li>
+                                <li><a class="dropdown-item" href="{% url 'question_recycle_bin' %}">📄 Question Recycle</a></li>
+                            </ul>
+                        </li> 
+                    {% elif user.role == 'student' %}
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-white" href="{% url 'my_profile' %}">My Profile</a>
+                        </li>
+                        
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-white" href="{% url 'cart_detail' %}">CART</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="nav-item">
+                        <a class="nav-link text-warning" href="{% url 'logout_view' %}">🚪 Logout</a>
+                    </li>
+                {% else %}
+                    <<li class="nav-item">
+                        <a class="nav-link" href="{% url 'test_template'%}"style="color: white;">Take Demo Test</a>
+                    </li>
+
+                    <li class="nav-item me-3">
+                        <a class="nav-link text-white" href="{% url 'registration' %}">📝 Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'login_view' %}">🔐 Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'contact' %}">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'about' %}">About Us</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

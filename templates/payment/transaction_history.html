@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Transaction History – Quiz Platform{% endblock %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">🧾 Your Payment History</h2>
+
+    <table class="table table-bordered table-striped shadow-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Subject</th>
+                <th>Order ID</th>
+                <th>Transaction ID</th>
+                <th>Amount (₹)</th>
+                <th>Status</th>
+                <th>Razorpay Payment ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in transactions %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.timestamp|date:"Y-m-d H:i" }}</td>
+                <td>{{ i.subject.name }}</td>
+                <td>{{ i.id }}</td>
+                <td>{{ i.transaction_id }}</td>
+                <td>{{ i.amount }}</td>
+                <td>
+                    {% if i.status == 'SUCCESS' %}
+                        <span class="badge bg-success">{{ i.status }}</span>
+                    {% elif i.status == 'FAILED' %}
+                        <span class="badge bg-danger">{{ i.status }}</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ i.status }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ i.razorpay_payment_id|default:"—" }}</td>
+            </tr>
+            {% empty %}
+            
+            <tr>
+                <td colspan="8" class="text-center text-muted">No transactions found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

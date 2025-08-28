@@ -1,0 +1,33 @@
+{% for set in sets %}
+<tr id="set-row-{{ set.id }}">
+    <td>{{ set.name }}</td>
+    <td>{{ set.category.name }}</td>
+    <td>{{ set.user.username }}</td>
+
+    {% if user_role == 'staff' and set.user == user %}
+        <td>
+            <button type="button"
+                    class="btn btn-warning btn-sm edit-set"
+                    data-id="{{ set.id }}"
+                    data-name="{{ set.name }}"
+                    data-category="{{ set.category.id }}">
+                Edit
+            </button>
+        </td>
+        <td>
+            <button type="button"
+                    class="btn btn-danger btn-sm delete-set"
+                    data-id="{{ set.id }}">
+                Delete
+            </button>
+        </td>
+    {% else %}
+        <td class="text-muted">N/A</td>
+        <td class="text-muted">N/A</td>
+    {% endif %}
+</tr>
+{% empty %}
+<tr>
+    <td colspan="5" class="text-center text-muted">No sets available</td>
+</tr>
+{% endfor %}

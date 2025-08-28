@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Question{% endblock %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+
+<div class="container mt-4">
+    <h3 class="mb-4">📝 Add Question</h3>
+
+    <div id="acknowledge" class="text-success text-center my-2"></div>
+
+    <form id="add-question-form">
+        {% csrf_token %}
+        <input type="hidden" name="question_id" id="question_id" />
+
+        <!-- Category -->
+        <div class="form-group">
+            <label>Category</label>
+            <select id="category" name="category" class="form-control" required>
+                <option value="">-- Select Category --</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}">{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+            <div class="text-danger" id="error-category"></div>
+        </div>
+
+        <!-- Subject -->
+        <div class="form-group">
+            <label>Subject</label>
+            <select id="subject" name="subject" class="form-control" required>
+                <option value="">-- Select Subject --</option>
+            </select>
+            <div class="text-danger" id="error-subject"></div>
+        </div>
+
+        <!-- Set -->
+        <div class="form-group">
+            <label>Set</label>
+            <select id="set" name="set" class="form-control" required>
+                <option value="">-- Select Set --</option>
+            </select>
+            <div class="text-danger" id="error-set"></div>
+        </div>
+
+        <!-- Question -->
+        <div class="form-group">
+            <label>Question</label>
+            <input type="text" name="question_text" id="question_text" class="form-control" required>
+            <div class="text-danger" id="error-question_text"></div>
+        </div>
+
+        <!-- Options -->
+        <div class="form-group">
+            <label>Option A</label>
+            <input type="text" name="option_a" id="option_a" class="form-control" required>
+            <div class="text-danger" id="error-option_a"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Option B</label>
+            <input type="text" name="option_b" id="option_b" class="form-control" required>
+            <div class="text-danger" id="error-option_b"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Option C</label>
+            <input type="text" name="option_c" id="option_c" class="form-control" required>
+            <div class="text-danger" id="error-option_c"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Option D</label>
+            <input type="text" name="option_d" id="option_d" class="form-control" required>
+            <div class="text-danger" id="error-option_d"></div>
+        </div>
+
+        <!-- Correct Option -->
+          <div class="form-group">
+            <label>Correct Option</label>
+            <input type="text" name="correct_option" id="correct_option" class="form-control" placeholder="A / B / C / D">
+            <div class="text-danger" id="error-correct_option"></div>
+        </div>
+        <!-- Difficulty Level -->
+        <div class="form-group">
+            <label>Difficulty Level (0.10 - 0.90)</label>
+            <input type="number" 
+                name="difficulty_score" 
+                id="difficulty_score" 
+                class="form-control" 
+                step="0.01" 
+                min="0.10" 
+                max="0.90" 
+                value="0.50" 
+                required>
+            <div class="text-danger" id="error-difficulty_score"></div>
+        </div>
+
+
+
+        <button type="submit" id="add-question-btn" class="btn btn-primary">Add Question</button>
+    </form>
+
+    <hr>
+
+    <h3>📜 Existing Questions</h3>
+
+    <table class="table table-bordered table-hover table-sm text-white">
+        <thead>
+            <tr>
+                <th>Question ID</th>
+                <th>Question</th>
+                <th>Category</th>
+                <th>Subject</th>
+                <th>Set</th>
+                <th>Option A</th>
+                <th>Option B</th>
+                <th>Option C</th>
+                <th>Option D</th>
+                <th>Correct Option</th>
+                <th>difficulty_score</th>
+                {% if user_role == "staff" %}
+                    <th>Edit</th>
+                    <th>Delete</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody id="question-table-body">
+            {% include 'partials/question_rows.html' with show_edit_button=True %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    const addQuestionUrl = "{% url 'add_question' %}";
+</script>
+{% endblock %}

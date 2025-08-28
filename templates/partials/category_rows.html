@@ -1,0 +1,27 @@
+{% for category in categories %}
+<tr>
+    <td>{{ category.name }}</td>
+    
+    {% if user.role == 'staff' and category.user == user %}
+        <td>
+            <button type="button" class="btn btn-warning btn-sm edit-btn"
+                    data-id="{{ category.id }}"
+                    data-name="{{ category.name }}">Edit</button>
+        </td>
+        <td>
+            <button type="button" class="btn btn-danger btn-sm delete-btn"
+                    data-id="{{ category.id }}">Delete</button>
+        </td>
+        
+    {% else %}
+        <td class="text-muted">N/A</td>
+        <td class="text-muted">N/A</td>
+    {% endif %}
+</tr>
+{% empty %}
+<tr>
+    <td colspan="3" class="text-center">No categories available.</td>
+</tr>
+{% endfor %}
+
+

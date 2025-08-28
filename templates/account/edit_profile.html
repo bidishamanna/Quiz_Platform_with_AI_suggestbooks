@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+<div class="container mt-5">
+
+  <!-- Back Button and Title -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <button class="btn btn-outline-primary" onclick="window.history.back();">← Back</button>
+    <h3 class="text-center text-primary mb-0">Edit Profile</h3>
+    <div></div> <!-- Placeholder to balance flex spacing -->
+  </div>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    <div class="form-group mb-3">
+      <label>First Name:</label>
+      <input type="text" class="form-control" name="first_name" 
+             value="{{ profile.first_name|default_if_none:'' }}">
+      <div class="text-danger">{{ errors.first_name }}</div>
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Last Name:</label>
+      <input type="text" class="form-control" name="last_name" 
+             value="{{ profile.last_name|default_if_none:'' }}">
+      <div class="text-danger">{{ errors.last_name }}</div>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Gender:</label><br>
+        {% for g in gender_options %}
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="gender" id="gender_{{ g }}" value="{{ g }}" 
+                    {% if profile.gender == g %}checked{% endif %}>
+            <label class="form-check-label" for="gender_{{ g }}">{{ g }}</label>
+            </div>
+        {% endfor %}
+        <div class="text-danger">{{ errors.gender }}</div>
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Date of Birth:</label>
+      <input type="date" class="form-control" name="dob" 
+             value="{{ profile.dob|default_if_none:'' }}">
+      <div class="text-danger">{{ errors.dob }}</div>
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Phone:</label>
+      <input type="text" class="form-control" name="phone" 
+             value="{{ profile.phone|default_if_none:'' }}">
+      <div class="text-danger">{{ errors.phone }}</div>
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Address:</label>
+
+      <div class="mb-2">
+        <input type="text" class="form-control" name="village" placeholder="Village / Locality">
+        <div class="text-danger">{{ errors.village }}</div>
+      </div>
+
+      <div class="mb-2">
+        <input type="text" class="form-control" name="city" placeholder="City / District">
+        <div class="text-danger">{{ errors.city }}</div>
+      </div>
+
+      <div class="mb-2">
+        <input type="text" class="form-control" name="state" placeholder="State / Province">
+        <div class="text-danger">{{ errors.state }}</div>
+      </div>
+
+      <div class="mb-2">
+        <input type="text" class="form-control" name="postal_code" placeholder="Postal / ZIP Code">
+        <div class="text-danger">{{ errors.postal_code }}</div>
+      </div>
+    </div>
+
+
+
+        <button type="submit" class="btn btn-success">Update Profile</button>
+        <a href="{% url 'my_profile' %}" class="btn btn-secondary">Cancel</a>
+      </form>
+</div>
+{% endblock %}

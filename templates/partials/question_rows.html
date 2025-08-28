@@ -1,0 +1,50 @@
+{% for question in questions %}
+<tr id="question-row-{{ question.id }}">
+    <td>{{ question.id }}</td>
+    <td>{{ question.question_text }}</td>
+    <td>{{ question.subject.category.name }}</td>
+    <td>{{ question.subject.name }}</td>
+    <td>{{ question.set.name }}</td>
+    <td>{{ question.option_a }}</td>
+    <td>{{ question.option_b }}</td>
+    <td>{{ question.option_c }}</td>
+    <td>{{ question.option_d }}</td>
+    <td>{{ question.correct_option }}</td>
+    <td>{{ question.difficulty_score }}</td>  {# NEW #}
+
+    {% if user_role == 'staff' and question.user.id == user.id %}
+        {% if show_edit_button %}
+            <td>
+                <button type="button"
+                        class="btn btn-warning btn-sm edit-question"
+                        data-id="{{ question.id }}"
+                        data-question="{{ question.question_text }}"
+                        data-category="{{ question.subject.category.id }}"
+                        data-subject="{{ question.subject.id }}"
+                        data-set="{{ question.set.id }}"
+                        data-a="{{ question.option_a }}"
+                        data-b="{{ question.option_b }}"
+                        data-c="{{ question.option_c }}"
+                        data-d="{{ question.option_d }}"
+                        data-correct="{{ question.correct_option }}"
+                        data-difficulty="{{ question.difficulty_score }}">  {# NEW #}
+                    Edit
+                </button>
+            </td>
+        {% endif %}
+
+        <td>
+            <button type="button"
+                    class="btn btn-danger btn-sm delete-question"
+                    data-id="{{ question.id }}">
+                Delete
+            </button>
+        </td>
+    {% else %}
+        {% if show_edit_button %}
+            <td class="text-muted">N/A</td>
+        {% endif %}
+        <td class="text-muted">N/A</td>
+    {% endif %}
+</tr>
+{% endfor %}

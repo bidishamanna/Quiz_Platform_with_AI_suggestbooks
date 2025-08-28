@@ -1,0 +1,29 @@
+{% for subject in subjects %}
+<tr id="subject-row-{{ subject.id }}">
+    <td>{{ subject.name }}</td>
+    <td>{{ subject.category.name }}</td>
+
+    {% if user_role == 'staff' and subject.user == user %}
+        <td>
+            <button class="btn btn-sm btn-info edit-subject"
+                data-id="{{ subject.id }}"
+                data-name="{{ subject.name }}"
+                data-category="{{ subject.category.id }}">Edit</button>
+        </td>
+        <td>
+            <button type="button"
+                    class="btn btn-danger btn-sm delete-subject"
+                    data-id="{{ subject.id }}">
+                Delete
+            </button>
+        </td>
+    {% else %}
+        <td class="text-muted">N/A</td>
+        <td class="text-muted">N/A</td>
+    {% endif %}
+</tr>
+{% empty %}
+<tr>
+    <td colspan="4" class="text-center text-muted">No subjects available.</td>
+</tr>
+{% endfor %}

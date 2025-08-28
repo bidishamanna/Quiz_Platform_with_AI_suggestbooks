@@ -1,0 +1,76 @@
+<table class="table table-striped table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Rating</th>
+            <th>Description</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if books %}
+            {% for book in books %}
+            <tr>
+                <td>{{ book.title }}</td>
+                <td>${{ book.price }}</td>
+                <td>{{ book.rating }}</td>
+                <td>{{ book.description }}</td>
+                <td>
+                    <button class="btn btn-success btn-sm" onclick="addToCart({{ book.id }})">
+                        Add to Cart
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="5" class="text-center text-muted">No books found for this subject.</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+<!-- Acknowledge message div -->
+<div id="acknowledge" style="display:none;"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Helper function to get CSRF token from cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Add to cart function
+    function addToCart(bookId) {
+        $.ajax({
+            url: `/cart/add/${bookId}/`,
+            method: "POST",
+            data: {
+                csrfmiddlewaretoken: getCookie("csrftoken")  // CSRF token for security
+            },
+            success: function (response) {
+                // On success, redirect to the cart page
+                window.location.href = "/cart/";  
+            },
+            error: function (xhr) {
+                // Show error message if failed
+                let errorMsg = xhr.responseJSON?.error || "Failed to add book to cart.";
+                $("#acknowledge").text(errorMsg)
+                    .css("color", "red")
+                    .fadeIn().delay(2000).fadeOut();
+            }
+        });
+    }
+</script>

@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Set Register{% endblock %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+
+<h2>Your Cart</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Book</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart %}
+        <tr id="cart-item-{{ item.id }}">
+            <td>{{ item.title }}</td>
+            <td>${{ item.price }}</td>
+            <td>
+                <button class="btn btn-secondary btn-sm" onclick="updateCartItem({{ item.id }}, 'decrease')">-</button>
+                <span class="quantity">{{ item.quantity }}</span>
+                <button class="btn btn-secondary btn-sm" onclick="updateCartItem({{ item.id }}, 'increase')">+</button>
+            </td>
+            <td class="total">${{ item.total }}</td>
+            <td>
+                <button class="btn btn-danger btn-sm" onclick="updateCartItem({{ item.id }}, 'remove')">Remove</button>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center text-muted">Your cart is empty.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p><strong>Total: $<span id="total">{{ total }}</span></strong></p>
+<button class="btn btn-primary" id="payNowBtn" onclick="proceedToPayment()">Pay Now</button>
+
+<!-- Place your script here, at the end of the body -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Update cart item quantity or remove item
+    function updateCartItem(itemId, action) {
+        $.ajax({
+            url: `/cart/update/${itemId}/`,
+            method: "POST",
+            data: {
+                csrfmiddlewaretoken: getCookie("csrftoken"),
+                action: action
+            },
+            success: function (response) {
+                if (response.removed) {
+                    $("#cart-item-" + itemId).remove();
+                } else {
+                    const row = $("#cart-item-" + itemId);
+                    row.find(".quantity").text(response.quantity);
+                    row.find(".total").text(response.total_item.toFixed(2));
+                }
+
+                $("#cartCount").text(response.cart_count);
+
+                if (!isNaN(response.total)) {
+                    $("#total").text(response.total.toFixed(2));
+                } else {
+                    console.error("Invalid total value:", response.total);
+                }
+            },
+            error: function (xhr) {
+                let errorMsg = xhr.responseJSON?.error || "Failed to update cart.";
+                alert(errorMsg);
+            }
+        });
+    }
+
+    // Proceed to the payment page
+    function proceedToPayment() {
+        $.ajax({
+            url: "/cart/checkout/",
+            method: "GET",
+            success: function (response) {
+                if (response.message) {
+                    alert(response.message);
+                    window.location.href = "/";
+                }
+            },
+            error: function (xhr) {
+                alert(xhr.responseJSON?.error || "Failed to process payment.");
+            }
+        });
+    }
+
+    // Helper to get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+
+{% endblock %}
+
+
+
+

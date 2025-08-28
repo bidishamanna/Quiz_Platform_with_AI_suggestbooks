@@ -1,0 +1,417 @@
+/* ===== General Layout & Background ===== */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: 'Segoe UI', sans-serif;
+  color: white;
+}
+
+/* Make sure major layout sections don't override background */
+section,
+.container,
+.row,
+footer,
+.category-section,
+.hero {
+  background: transparent !important;
+}
+
+/* ===== Hero Section ===== */
+.hero {
+  padding: 80px 0;
+  text-align: center;
+  color: white;
+}
+
+/* ===== Category Styles ===== */
+.category-section {
+  padding: 2rem 0;
+}
+
+.category-card {
+  border-radius: 1rem;
+  background: linear-gradient(to bottom right, #ffffff, #ffe6f0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: #212529;
+}
+
+.category-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+}
+
+.category-card .card-body {
+  background: linear-gradient(135deg, #fdf0f0, #ffe0ec);
+  border-radius: 1rem;
+  padding: 2rem;
+  color: #333;
+}
+
+.category-icon {
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, #ff6b6b, #f06595);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 2rem;
+  margin: 0 auto;
+  box-shadow: 0 8px 16px rgba(240, 101, 149, 0.4);
+}
+
+.category-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #343a40;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* View Subjects Button */
+.view-subjects-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background: linear-gradient(90deg, #0d6efd, #6610f2);
+  color: #fff;
+  font-weight: 500;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.view-subjects-btn:hover {
+  background: linear-gradient(90deg, #6610f2, #0d6efd);
+  transform: scale(1.05);
+  color: #fff;
+}
+
+/* ===== Quiz Cards & Hover Effects ===== */
+.quiz-card {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.quiz-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.hover-show {
+  transition: opacity 0.3s ease;
+}
+
+.quiz-card:hover .hover-show {
+  opacity: 1;
+}
+
+.overlay a {
+  text-decoration: none;
+}
+
+/* ===== Typography Enhancements ===== */
+.custom-blue,
+h2.card-title span,
+.text-blue {
+  color: #0d6efd !important;
+  font-weight: 600;
+}
+
+.welcome-section h2 {
+  color: white;
+  font-size: 5rem;
+  font-weight: bold;
+}
+
+.welcome-section p {
+  color: white;
+  font-size: 1.5rem;
+}
+
+.container.text-center h2 {
+  color: white;
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.container.text-center p {
+  color: white;
+  font-size: 1.5rem;
+}
+
+/* ===== Quiz Question and Result Styling ===== */
+#q-text,
+#score-area,
+#score-area h4,
+#score-area p,
+#score-area span,
+#options-container .form-check-label,
+.question-text,
+.option-label,
+.score-summary {
+  color: white;
+}
+
+.question-text {
+  font-size: 3rem;
+}
+
+.option-label,
+.score-summary {
+  font-size: 1.25rem;
+}
+
+/* ===== Contact Page Styling ===== */
+.full-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+.contact-content {
+  text-align: center;
+  max-width: 1000px;
+  width: 100%;
+  padding: 60px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  color: white;
+}
+
+.contact-content h1,
+.about-content h1 {
+  font-size: 4rem;
+  margin-bottom: 25px;
+  color: white;
+}
+
+.tagline {
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.description {
+  font-size: 1.3rem;
+  margin-bottom: 35px;
+  line-height: 1.8;
+}
+
+.contact-info p {
+  font-size: 1.6rem;
+  margin: 12px 0;
+}
+
+.footer {
+  margin-top: 45px;
+  font-size: 1.1rem;
+  color: white;
+}
+.question-box {
+    background: inherit; /* Inherit the body's background */
+    color: white;
+}
+#quiz-area {
+    margin-top: 30px;
+}
+
+/* Make form input text blue */
+  .form-control {
+    color: #007bff; /* Bootstrap primary blue */
+    background-color: #f8f9fa; /* Light background for contrast */
+    border-color: #ced4da;
+  }
+
+  /* Optional: Make placeholder text light blue */
+  .form-control::placeholder {
+    color: #80bdff;
+  }
+
+  /* Make labels blue */
+  label {
+    color: #007bff;
+  }
+
+  /* Make gender radio labels blue */
+  .form-check-label {
+    color: #007bff;
+  }
+
+  /* Keep error messages red */
+  .text-danger {
+    color: #dc3545;
+  }
+
+  /* Spinner text dark for contrast */
+  #spinner-overlay p {
+    color: #000 !important;
+  }
+  
+
+#customAlert {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.25rem; /* bigger text */
+  padding: 20px 30px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  border-radius: 10px;
+  z-index: 1050;
+  max-width: 500px;
+  text-align: center;
+}
+
+/* Make the button bigger */
+#customAlert .btn {
+  font-size: 1.1rem;
+  padding: 8px 20px;
+}
+
+/* Remove Bootstrap’s close “×” if it exists */
+#customAlert .btn-close {
+  display: none;
+}
+/* Fancy Category Button */
+.category-btn {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: all 0.3s ease-in-out;
+}
+
+.category-btn:hover {
+    background: linear-gradient(135deg, #2575fc, #6a11cb);
+    transform: scale(1.05);
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.3);
+}
+
+/* Dropdown Styling */
+.category-dropdown {
+    background: #2a2a2a; /* dark background */
+    color: white;
+}
+
+.category-dropdown .dropdown-item {
+    color: white;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.category-dropdown .dropdown-item:hover {
+    background: #444;
+    color: #fff;
+    transform: translateX(5px);
+}
+
+/* Fancy Category Button */
+.category-btn {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: all 0.3s ease-in-out;
+    min-width: 280px;  /* wider so text & arrow fit */
+}
+
+.category-btn:hover {
+    background: linear-gradient(135deg, #2575fc, #6a11cb);
+    transform: scale(1.05);
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.3);
+}
+
+/* Dropdown Styling */
+.category-dropdown {
+    background: #2a2a2a;
+    color: white;
+}
+
+.category-dropdown .dropdown-item {
+    color: white;
+    border-radius: 8px;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.category-dropdown .dropdown-item:hover {
+    background: #444;
+    color: #fff;
+    transform: translateX(5px);
+}
+/* Category name default */
+.category-name {
+    color: #000000;   /* black */
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* On hover, keep it black but slightly bigger for effect */
+.dropdown-item:hover .category-name {
+    color: #000000;  
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
+.dropdown-item:hover, 
+.dropdown-item:focus {
+    background-color: transparent !important;
+}
+/* Table styling */
+.table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table td {
+    background-color: #fff;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Add hover effect for table rows */
+.table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Action Button Styling */
+.table .btn {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.table .btn:hover {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Column alignment */
+.table td, .table th {
+    vertical-align: middle;
+}
+
+/* Responsive for small screens */
+@media (max-width: 768px) {
+    .table th, .table td {
+        padding: 8px;
+    }
+}

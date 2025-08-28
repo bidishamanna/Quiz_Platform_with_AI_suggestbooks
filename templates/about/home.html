@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home – Quiz Platform{% endblock %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+
+<!-- Hero Section -->
+<section class="hero-section text-center text-white d-flex flex-column justify-content-center align-items-center" 
+         style="min-height: 30vh; background-color: #1c1c1c; padding: 60px 0 30px 0;">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">Unlock Your Potential. Learn, Quiz, Master.</h1>
+        <p class="lead text-white">Browse through diverse categories, choose your challenge, and enhance your knowledge.</p>
+    </div>
+
+<!-- Category Dropdown -->
+<div class="mt-4">
+    <div class="dropdown d-flex justify-content-center">
+        <button class="btn btn-lg rounded-pill px-5 py-3 shadow-lg border-0 category-btn d-flex align-items-center justify-content-between" 
+                type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="d-flex align-items-center">
+                📂 Select a Category
+            </span>
+            <span class="ms-3">▼</span>
+        </button>
+
+        <ul class="dropdown-menu w-100 shadow-lg border-0 rounded-3 mt-2 category-dropdown" 
+            aria-labelledby="dropdownMenuButton" style="max-height: 300px; overflow-y: auto;">
+
+            <!-- 🔍 Search Bar -->
+            <li class="px-2 py-2">
+                <input type="text" id="categorySearch" class="form-control rounded-pill" 
+                       placeholder="Search categories...">
+            </li>
+            <hr class="my-1">
+
+            <!-- Category List -->
+            <div id="categoryList">
+                {% for category in categories %}
+                    <li class="px-2 py-2 category-item">
+                        <a class="dropdown-item d-flex justify-content-between align-items-center category-card"
+                           href="{% url 'category_sets_page' category.slug %}">
+                            <span class="category-name">{{ category.name }}</span>
+                            <span class="badge bg-primary">Go</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </div>
+
+            <!-- No Results (hidden initially) -->
+            <li id="noResults" class="text-center text-muted py-2 d-none">
+                No categories found
+            </li>
+        </ul>
+    </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("categorySearch");
+    const items = Array.from(document.querySelectorAll(".category-item"));
+    const noResults = document.getElementById("noResults");
+
+    function filterList() {
+        const q = searchInput.value.trim().toLowerCase();
+        let found = 0;
+
+        items.forEach(li => {
+            const name = li.querySelector(".category-name").textContent.trim().toLowerCase();
+            const match = name.includes(q);
+            li.style.display = match ? "block" : "none";
+            if (match) found++;
+        });
+
+        if (noResults) noResults.classList.toggle("d-none", found > 0);
+    }
+
+    // Live filter as you type (case-insensitive)
+    searchInput.addEventListener("input", filterList);
+
+    // Press Enter to go
+    searchInput.addEventListener("keydown", function (e) {
+        if (e.key !== "Enter") return;
+        e.preventDefault(); // don't submit/close, we will navigate
+
+        const q = searchInput.value.trim().toLowerCase();
+        if (!q) return;
+
+        // 1) Try exact (case-insensitive) match first
+        let target = items.find(li => {
+            if (li.style.display === "none") return false;
+            const name = li.querySelector(".category-name").textContent.trim().toLowerCase();
+            return name === q;
+        });
+
+        // 2) Otherwise, first visible match
+        if (!target) {
+            target = items.find(li => li.style.display !== "none");
+        }
+
+        if (target) {
+            const a = target.querySelector("a");
+            if (a && a.href) window.location.href = a.href;
+        }
+    });
+
+    // Initial state
+    filterList();
+});
+</script>
+
+
+</section>
+
+<!-- Leaderboard Section -->
+<section class="py-4 text-center" style="background: #f8f9fa;">
+    <div class="container">
+        <h2 class="fw-bold mb-3">🏆 Top Student from Each Set</h2>
+        <ul id="home-leaderboard" class="list-group list-group-flush w-75 mx-auto shadow-sm">
+            <li class="list-group-item">Loading leaderboard...</li>
+        </ul>
+    </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function loadHomeLeaderboard() {
+        $.ajax({
+            url: "{% url 'home_leaderboard' %}",   
+            type: "GET",
+            success: function(response) {
+                let leaderboardList = $("#home-leaderboard");
+                leaderboardList.empty();
+
+                if (response.leaderboard.length > 0) {
+                    response.leaderboard.forEach(player => {
+                        leaderboardList.append(`
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>
+                                    <strong>${player.user__username}</strong> 
+                                    | Category: <em>${player.attempt__set__category__name}</em> 
+                                    | Set: <em>${player.attempt__set__name}</em>
+                                </span>
+                                <span class="fw-bold text-success">marks - ${player.score}</span>
+                            </li>
+                        `);
+                    });
+                } else {
+                    leaderboardList.append(`<li class="list-group-item">No top students yet.</li>`);
+                }
+            },
+            error: function() {
+                $("#home-leaderboard").html(`<li class="list-group-item text-danger">Error loading leaderboard.</li>`);
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        loadHomeLeaderboard();
+    });
+
+</script>
+{% comment %} 
+<section class="py-5 text-center text-white" style="background: #2e2e54;">
+    <div class="container">
+        <h2 class="fw-bold mb-5">Why Join Our Quiz Platform?</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="p-4 rounded-4 shadow-sm h-100 hover-card">
+                    <div class="fs-1 mb-3">📚</div>
+                    <h5 class="fw-bold">Learn</h5>
+                    <p>Boost your knowledge with diverse topics and detailed explanations.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4 rounded-4 shadow-sm h-100 hover-card">
+                    <div class="fs-1 mb-3">⚡</div>
+                    <h5 class="fw-bold">Compete</h5>
+                    <p>Challenge friends, track your rank, and become a quiz champion.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4 rounded-4 shadow-sm h-100 hover-card">
+                    <div class="fs-1 mb-3">📊</div>
+                    <h5 class="fw-bold">Track Progress</h5>
+                    <p>View performance analytics and improve with every quiz attempt.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.hover-card {
+    background: transparent;
+    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-card:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+</style> {% endcomment %}
+
+
+{% endblock %}

@@ -1,0 +1,65 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+
+{% if user_role == "staff" %}
+<div class="container-fluid mt-4">
+    <h2 class="mb-4 text-center text-success">Question List</h2>
+
+    {% if questions %}
+        <div class="table-responsive shadow rounded">
+            <table class="table table-bordered table-striped table-hover w-100 align-middle">
+                <thead class="table-success text-center">
+                    <tr>
+                        <th scope="col">Question ID</th>
+                        <th scope="col">Question</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Subject</th>
+                        <th scope="col">Set</th>
+                        <th scope="col">Option A</th>
+                        <th scope="col">Option B</th>
+                        <th scope="col">Option C</th>
+                        <th scope="col">Option D</th>
+                        <th scope="col">Correct Option</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    {% for q in questions %}
+                    <tr>
+                        <td>{{ q.id }}</td>
+                        <td>{{ q.question_text }}</td>
+                        <td>{{ q.set.category.name }}</td>
+                        <td>{{ q.set.subject.name }}</td>
+                        <td>{{ q.set.name }}</td>
+                        <td>{{ q.option_a }}</td>
+                        <td>{{ q.option_b }}</td>
+                        <td>{{ q.option_c }}</td>
+                        <td>{{ q.option_d }}</td>
+                        <td>{{ q.correct_option }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">Edit</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center">No questions available.</div>
+    {% endif %}
+</div>
+{% else %}
+<div class="alert alert-danger text-center mt-5">
+    <h4>Access Denied</h4>
+    <p>You are not authorized to view this page.</p>
+</div>
+{% endif %}
+{% endblock %}

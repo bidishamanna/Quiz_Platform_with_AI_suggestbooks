@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title">
+                Welcome, <strong>{{ user.first_name }}</strong> ({{ user.role }})
+            </h2>
+            <p class="card-text">You are logged in as <strong>{{ user.username }}</strong>.</p>
+
+            <!-- Category Selection Form (AJAX handled) -->
+            <form id="start_test_form" method="POST">
+                {% csrf_token %}
+                <label for="category" class="form-label"><strong>Select Category:</strong></label>
+                <select name="category_id" class="form-select" id="category" required>
+                    <option value="">-- Choose a category --</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" id="start_test_btn" class="btn btn-primary mt-3">Start Test</button>
+            </form>
+
+            <!-- Alert box for success/error -->
+            <div id="test_acknowledge" class="alert d-none mt-3"></div>
+
+            <!-- Display Assigned Set & Questions -->
+            <div id="test_area" class="mt-5 d-none">
+                <h4>Assigned Set: <span id="set_number"></span></h4>
+                <div id="question_list" class="mt-3"></div>
+            </div>
+
+            <!-- Logout Button -->
+            <div class="mt-4">
+                <form method="POST" action="{% url 'logout_view' %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger">Logout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

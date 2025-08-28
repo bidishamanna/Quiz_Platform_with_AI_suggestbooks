@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Set Register{% endblock %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+<div class="container mt-4">
+    <h3 class="text-center text-primary">Set Register</h3>
+
+    <!-- Set Form -->
+    <form method="post" id="setForm">
+        {% csrf_token %}
+        <input type="hidden" id="set_id" name="set_id">
+
+        <div class="form-group">
+            <label for="category">Select Category:</label>
+            <select id="category" name="category" class="form-control" required>
+                <option value="">-- Select Category --</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+            <div id="category_error" class="text-danger"></div>
+        </div>
+        <br>
+
+        <div class="form-group">
+            <label for="set_name">Set Name:</label>
+            <input type="text" class="form-control" id="set_name" name="set_name" required>
+            <div id="set_name_error" class="text-danger"></div>
+        </div>
+        <br>
+
+        <button id="set_register_btn" class="btn btn-success">Save</button>
+    </form>
+
+    <!-- Message -->
+    <div id="acknowledge" class="mt-3"></div>
+
+    <hr>
+
+    <!-- Set List -->
+    <h4 class="mb-3">Set List</h4>
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Set Name</th>
+                <th>Category Name</th>
+                <th>Created By</th>
+                {% if user_role == 'staff' %}
+                <th>Edit</th>
+                <th>Delete</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody id="setList">
+            {% include 'partials/set_rows.html' with sets=sets user_role=user_role user=user %}
+        </tbody>
+
+
+
+    </table>
+</div>
+{% endblock %}

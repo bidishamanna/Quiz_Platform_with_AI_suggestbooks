@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Upload Questions{% endblock %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+
+<div class="container mt-4">
+    <h3 class="mb-4">📂 Upload Questions via CSV</h3>
+
+    <!-- ✅ Acknowledgement -->
+    <div id="acknowledge" class="text-success text-center my-2"></div>
+
+    <form id="upload-question-form" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Category -->
+        <div class="form-group">
+            <label>Category</label>
+            <select id="category" name="category" class="form-control" required>
+                <option value="">-- Select Category --</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}">{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+            <div class="text-danger" id="error-category"></div>
+        </div>
+
+        <!-- Subject -->
+        <div class="form-group">
+            <label>Subject</label>
+            <select id="subject" name="subject" class="form-control" required>
+                <option value="">-- Select Subject --</option>
+            </select>
+            <div class="text-danger" id="error-subject"></div>
+        </div>
+
+        <!-- Set -->
+        <div class="form-group">
+            <label>Set</label>
+            <select id="set" name="set" class="form-control" required>
+                <option value="">-- Select Set --</option>
+            </select>
+            <div class="text-danger" id="error-set"></div>
+        </div>
+
+        <!-- CSV File -->
+        <div class="form-group">
+            <label>CSV File</label>
+            <input type="file" name="file" id="csv_file" class="form-control" accept=".csv" required>
+            <small class="form-text text-muted">
+                CSV must have: question_text, option_a, option_b, option_c, option_d, correct_option
+            </small>
+            <div class="text-danger" id="error-csv_file"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+
+    <hr>
+
+    <h3>📜 Existing Questions</h3>
+
+    <table class="table table-bordered table-hover table-sm text-white">
+        <thead>
+            <tr>
+                <th>Question ID</th>
+                <th>Question</th>
+                <th>Category</th>
+                <th>Subject</th>
+                <th>Set</th>
+                <th>Option A</th>
+                <th>Option B</th>
+                <th>Option C</th>
+                <th>Option D</th>
+                <th>Correct Option</th>
+                 <th>difficulty_score</th>
+                {% if user_role == "staff" %}
+                    
+                    <th>Delete</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody id="question-table-body">
+            {% include 'partials/question_rows.html' with show_edit_button=False %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    const uploadQuestionsUrl = "{% url 'upload_questions' %}";
+</script>
+{% endblock %}

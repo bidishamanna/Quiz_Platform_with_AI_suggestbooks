@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+<div class="container-fluid mt-4">
+    <h2 class="mb-4 text-center text-primary">Category List</h2>
+
+    {% if categories %}
+        <div class="table-responsive shadow rounded">
+            <table class="table table-bordered table-striped table-hover w-100 align-middle">
+                <thead class="table-primary text-center">
+                    <tr>
+                       
+                        <th scope="col">Category Name</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    {% for category in categories %}
+                    <tr>
+                     
+                        <td>{{ category.name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center">No categories available.</div>
+    {% endif %}
+</div>
+{% endblock %}
+

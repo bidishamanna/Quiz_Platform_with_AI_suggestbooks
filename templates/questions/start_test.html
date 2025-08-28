@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+
+<div id="start-section" class="d-flex justify-content-center align-items-center flex-column" style="height: 80vh;">
+    <h3 class="text-white mb-3">
+        Start your test: <span class="text-warning">{{ set.name }}</span>
+    </h3>
+    <button id="start-btn" class="btn btn-success">Start Test</button>
+    <input type="hidden" id="set-slug" value="{{ set.slug }}">
+</div>
+
+
+<!-- QUIZ Section (Hidden by default) -->
+<div id="quiz-area" class="d-none text-center p-4 rounded question-box bg-dark text-white" style="min-height: 300px;">
+    {% csrf_token %}
+    <div id="timer" class="text-white mb-3"></div>
+    <div id="question-box"></div>
+    <div id="options-box" class="mb-3"></div>
+    <button id="submit-btn" class="btn btn-primary">Submit Answer</button>
+</div>
+
+<script src="{% static 'js/quiz.js' %}"></script>
+{% endblock %}
