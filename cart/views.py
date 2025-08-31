@@ -99,34 +99,6 @@ def cart_detail(request):
         'last_subject': subject
     })
 
-# @jwt_required
-# def checkout(request):
-#     user = request.user
-#     cart_items = CartItem.objects.filter(user=user).select_related("book")
-    
-#     if not cart_items.exists():
-#         return render(request, 'cart/checkout.html', {
-#             'cart': [],
-#             'total': 0
-#         })
-    
-#     data = [
-#         {
-#             "id": item.id,
-#             "title": item.book.title,
-#             "price": float(item.book.price),
-#             "quantity": item.quantity,
-#             "total": float(item.book.price * item.quantity),
-#         }
-#         for item in cart_items
-#     ]
-#     total = sum(item['total'] for item in data)
-
-#     return render(request, 'cart/checkout.html', {
-#         'cart': data,
-#         'total': total
-#     })
-
 from django.views.decorators.http import require_POST
 @jwt_required 
 

@@ -91,7 +91,9 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from .models import Payment
-from .utils import send_invoice_pdf   # ✅ import the function we created earlier
+from .utils import send_invoice_pdf 
+from cart.models import CartItem
+
 @csrf_exempt
 @jwt_required
 @role_required('student')
@@ -103,21 +105,21 @@ def verify_payment(request):
         razorpay_payment_id = data.get('razorpay_payment_id')
         razorpay_signature = data.get('razorpay_signature')
 
-        # Verify signature
+        # Verify Razorpay signature
         client.utility.verify_payment_signature({
             "razorpay_order_id": razorpay_order_id,
             "razorpay_payment_id": razorpay_payment_id,
             "razorpay_signature": razorpay_signature
         })
 
-        # Get Payment
+        # Get Payment object
         payment = get_object_or_404(Payment, transaction_id=razorpay_order_id)
         payment.razorpay_payment_id = razorpay_payment_id
         payment.status = 'SUCCESS'
         payment.save()
 
-        # ✅ Clear cart after payment
-        request.session['cart'] = []
+        # ✅ Clear user's cart items after successful payment
+        CartItem.objects.filter(user=payment.user).delete()
 
         # ✅ Send Invoice Email with PDF
         books = payment.books.all()
@@ -125,7 +127,10 @@ def verify_payment(request):
         user = payment.user
         send_invoice_pdf(user, books, total, razorpay_order_id, payment.timestamp)
 
-        return JsonResponse({"success": True, "message": "Payment verified successfully. Invoice sent to email."})
+        return JsonResponse({
+            "success": True,
+            "message": "Payment verified successfully. Invoice sent to email."
+        })
 
     except Exception as e:
         return JsonResponse({"error": str(e)})

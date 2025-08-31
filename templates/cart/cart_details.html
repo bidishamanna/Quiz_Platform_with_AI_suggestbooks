@@ -38,10 +38,11 @@
         {% endfor %}
     </tbody>
 </table>
-
 <p><strong>Total: ₹<span id="total">{{ total }}</span></strong></p>
-<a href="{% url 'checkout' %}" class="btn btn-primary">check out</a>
 
+{% if cart %}
+    <a href="{% url 'checkout' %}" class="btn btn-primary">Check Out</a>
+{% endif %}
 
 <!-- ✅ Updated Back Button -->
 {% if last_subject %}
