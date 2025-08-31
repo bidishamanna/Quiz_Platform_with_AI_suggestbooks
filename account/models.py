@@ -64,3 +64,4 @@ class UserToken(models.Model):
         return f"Token for {self.user.email}(Expires:{self.expired_at})"
     
 
+

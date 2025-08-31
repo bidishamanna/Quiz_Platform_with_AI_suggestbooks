@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+{% include 'includes/navbar.html' %}
+
+<div class="container mt-4">
+    <h2>Checkout</h2>
+
+    <!-- Show total amount -->
+    <h4 class="mt-3">Grand Total: <strong>₹{{ total|floatformat:2 }}</strong></h4>
+
+    <div class="mt-4">
+        <!-- Back to cart -->
+        <a href="{% url 'cart' %}" class="btn btn-secondary">Back to Cart</a>
+
+        <!-- Proceed to pay button -->
+        <form method="post" id="payment-form">
+            {% csrf_token %}
+            <button id="pay-button" type="button" class="btn btn-success">Proceed to Pay</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

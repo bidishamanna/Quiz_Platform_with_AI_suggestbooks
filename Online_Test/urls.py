@@ -12,7 +12,7 @@ urlpatterns = [
     path("subject/",include('subject.urls')),
     path('question_sets/',include('question_sets.urls')),
     path('quiz/',include('quiz.urls')),
-    # path('payment/',include('payment.urls')),
+    path('payment/',include('payment.urls')),
     path('cart/',include('cart.urls')),
 
 ]

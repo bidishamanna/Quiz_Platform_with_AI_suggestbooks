@@ -5,6 +5,7 @@ from django.db import models
 from django.db import models
 from account.models import User
 from questions.models import Book
+
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart_items")
     book = models.ForeignKey(Book, on_delete=models.CASCADE)

@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'subject.apps.SubjectConfig',
     'question_sets.apps.QuestionSetsConfig',
     'quiz.apps.QuizConfig',
-    # 'payment.apps.PaymentConfig',
+    'payment.apps.PaymentConfig',
     'cart.apps.CartConfig',
 ]
 

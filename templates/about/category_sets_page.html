@@ -4,17 +4,30 @@
 
 {% block content %}
 {% include 'includes/navbar.html' %}
-    <div class="container mt-5">
-        <h2>{{ category.name }} Sets</h2>
-        <ul class="list-group">
-            {% for set in sets %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ set.name }}
+<div class="container mt-5">
+    <h2>{{ category.name }} Sets</h2>
+    <ul class="list-group">
+        {% for set in sets %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ set.name }}
+                {% if user.is_authenticated %}
+                    <!-- If logged in: go to start_test -->
                     <a href="{% url 'start_test' set.slug %}" class="btn btn-sm btn-success">Start</a>
-                </li>
-            {% empty %}
-                <li class="list-group-item">No sets available for this category.</li>
-            {% endfor %}
-        </ul>
-    </div>
+                {% else %}
+                    <!-- If not logged in: show alert and redirect -->
+                    <button class="btn btn-sm btn-warning" onclick="redirectToLogin()">Start</button>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li class="list-group-item">No sets available for this category.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<script>
+    function redirectToLogin() {
+        alert("You have to login to start the test.");
+        window.location.href = "{% url 'login_view' %}";
+    }
+</script>
 {% endblock %}

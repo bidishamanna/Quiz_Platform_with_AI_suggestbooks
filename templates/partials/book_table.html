@@ -52,7 +52,7 @@
         return cookieValue;
     }
 
-    // Add to cart function
+        // Add to cart function
     function addToCart(bookId) {
         $.ajax({
             url: `/cart/add/${bookId}/`,
@@ -61,16 +61,21 @@
                 csrfmiddlewaretoken: getCookie("csrftoken")  // CSRF token for security
             },
             success: function (response) {
-                // On success, redirect to the cart page
-                window.location.href = "/cart/";  
+                // Update cart count in navbar without redirect
+                $("#cartCount").text(response.cart_count);
+
+                // Show acknowledgment message
+                $("#acknowledge").text("Book added to cart!")
+                    .css("color", "green")
+                    .fadeIn().delay(2000).fadeOut();
             },
             error: function (xhr) {
-                // Show error message if failed
                 let errorMsg = xhr.responseJSON?.error || "Failed to add book to cart.";
                 $("#acknowledge").text(errorMsg)
                     .css("color", "red")
                     .fadeIn().delay(2000).fadeOut();
             }
         });
-    }
+    }   
+
 </script>

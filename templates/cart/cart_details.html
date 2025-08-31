@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Set Register{% endblock %}
+{% block title %}Your Cart{% endblock %}
 
 {% block content %}
 {% include 'includes/navbar.html' %}
@@ -20,13 +20,13 @@
         {% for item in cart %}
         <tr id="cart-item-{{ item.id }}">
             <td>{{ item.title }}</td>
-            <td>${{ item.price }}</td>
+            <td>₹{{ item.price }}</td>
             <td>
                 <button class="btn btn-secondary btn-sm" onclick="updateCartItem({{ item.id }}, 'decrease')">-</button>
                 <span class="quantity">{{ item.quantity }}</span>
                 <button class="btn btn-secondary btn-sm" onclick="updateCartItem({{ item.id }}, 'increase')">+</button>
             </td>
-            <td class="total">${{ item.total }}</td>
+            <td class="total">₹{{ item.total }}</td>
             <td>
                 <button class="btn btn-danger btn-sm" onclick="updateCartItem({{ item.id }}, 'remove')">Remove</button>
             </td>
@@ -39,13 +39,21 @@
     </tbody>
 </table>
 
-<p><strong>Total: $<span id="total">{{ total }}</span></strong></p>
-<button class="btn btn-primary" id="payNowBtn" onclick="proceedToPayment()">Pay Now</button>
+<p><strong>Total: ₹<span id="total">{{ total }}</span></strong></p>
+<a href="{% url 'checkout' %}" class="btn btn-primary">check out</a>
 
-<!-- Place your script here, at the end of the body -->
+
+<!-- ✅ Updated Back Button -->
+{% if last_subject %}
+    <a href="/questions/books/suggest/?subject={{ last_subject }}" class="btn btn-secondary">Back</a>
+{% else %}
+    <button class="btn btn-secondary" onclick="window.history.back()">Back</button>
+{% endif %}
+
+<!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    // Update cart item quantity or remove item
+    // Update cart item
     function updateCartItem(itemId, action) {
         $.ajax({
             url: `/cart/update/${itemId}/`,
@@ -60,25 +68,22 @@
                 } else {
                     const row = $("#cart-item-" + itemId);
                     row.find(".quantity").text(response.quantity);
-                    row.find(".total").text(response.total_item.toFixed(2));
+                    row.find(".total").text("₹" + response.total_item.toFixed(2));
                 }
 
                 $("#cartCount").text(response.cart_count);
 
                 if (!isNaN(response.total)) {
                     $("#total").text(response.total.toFixed(2));
-                } else {
-                    console.error("Invalid total value:", response.total);
                 }
             },
             error: function (xhr) {
-                let errorMsg = xhr.responseJSON?.error || "Failed to update cart.";
-                alert(errorMsg);
+                alert(xhr.responseJSON?.error || "Failed to update cart.");
             }
         });
     }
 
-    // Proceed to the payment page
+    // Proceed to payment
     function proceedToPayment() {
         $.ajax({
             url: "/cart/checkout/",
@@ -95,7 +100,7 @@
         });
     }
 
-    // Helper to get CSRF token
+    // CSRF helper
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -111,9 +116,4 @@
         return cookieValue;
     }
 </script>
-
 {% endblock %}
-
-
-
-

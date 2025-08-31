@@ -4,8 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Book, CartItem
 from account.decorators import jwt_required
 
-@csrf_exempt  # Optional (depends on how you handle CSRF + JWT)
-@jwt_required
+ # Optional (depends on how you handle CSRF + JWT)
+
 @csrf_exempt   # Optional (depends on how you handle CSRF + JWT)
 @jwt_required
 def add_to_cart(request, book_id):
@@ -25,6 +25,8 @@ def add_to_cart(request, book_id):
         return JsonResponse({'success': True, 'cart_count': count})
 
     return JsonResponse({'error': 'Invalid method'}, status=405)
+
+
 @csrf_exempt   # Optional
 @jwt_required
 def update_cart(request, item_id):
@@ -70,7 +72,6 @@ def update_cart(request, item_id):
 
 from django.shortcuts import render
 from .models import CartItem
-
 @jwt_required
 def cart_detail(request):
     user = request.user
@@ -89,24 +90,58 @@ def cart_detail(request):
 
     total = sum(item['total'] for item in data)
 
+    # 👇 capture subject if passed in URL (?subject=Math)
+    subject = request.GET.get("subject", "")
+
     return render(request, 'cart/cart_details.html', {
         'cart': data,
-        'total': total
+        'total': total,
+        'last_subject': subject
     })
 
+# @jwt_required
+# def checkout(request):
+#     user = request.user
+#     cart_items = CartItem.objects.filter(user=user).select_related("book")
+    
+#     if not cart_items.exists():
+#         return render(request, 'cart/checkout.html', {
+#             'cart': [],
+#             'total': 0
+#         })
+    
+#     data = [
+#         {
+#             "id": item.id,
+#             "title": item.book.title,
+#             "price": float(item.book.price),
+#             "quantity": item.quantity,
+#             "total": float(item.book.price * item.quantity),
+#         }
+#         for item in cart_items
+#     ]
+#     total = sum(item['total'] for item in data)
 
-@jwt_required
+#     return render(request, 'cart/checkout.html', {
+#         'cart': data,
+#         'total': total
+#     })
+
+from django.views.decorators.http import require_POST
+@jwt_required 
+
 def checkout(request):
     user = request.user
     cart_items = CartItem.objects.filter(user=user).select_related("book")
     
     if not cart_items.exists():
-        return JsonResponse({'error': 'Your cart is empty'}, status=400)
+        return render(request, 'cart/checkout.html', {
+            'total': 0
+        })
     
     total = sum(item.book.price * item.quantity for item in cart_items)
-    
-    # Here you could redirect to a payment gateway or use a payment API (e.g., Stripe, PayPal)
-    return JsonResponse({
-        'total': total,
-        'message': 'Proceed to payment'
+
+    return render(request, 'cart/checkout.html', {
+        'total': total
     })
+

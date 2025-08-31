@@ -63,7 +63,7 @@ class UserAnswer(models.Model):
 
 # models.py
 from django.db import models
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 
 class Book(models.Model):
     subject = models.CharField(max_length=100)  # The subject this book relates to

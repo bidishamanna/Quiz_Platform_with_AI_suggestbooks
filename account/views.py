@@ -296,13 +296,36 @@ from django.http import JsonResponse
 
 
 from django.shortcuts import render, get_object_or_404
-from .models import Profile
+# from .models import Profile
+from django.shortcuts import render, get_object_or_404
+from payment.models import Payment
+from account.models import Profile
 
 def my_profile(request):
     # Fetch the profile for the logged-in user
     profile = get_object_or_404(Profile, user=request.user)
-    
-    return render(request, 'account/my_profile.html', {'profile': profile})
+
+    # Fetch all payments made by this user with books
+    payments = Payment.objects.filter(user=request.user).prefetch_related('books').order_by('-timestamp')
+
+    # Collect all purchased books along with payment info
+    purchased_books = []
+    for payment in payments:
+        for book in payment.books.all():
+            purchased_books.append({
+                'title': book.title,
+                'price': book.price,
+                'author': getattr(book, 'author', '-'),  # Optional field
+                'payment_date': payment.timestamp,
+                'transaction_id': payment.transaction_id
+            })
+
+    # ✅ No duplicate filtering here, each purchase shows individually
+    return render(request, 'account/my_profile.html', {
+        'profile': profile,
+        'purchased_books': purchased_books
+    })
+
 
 
 

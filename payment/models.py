@@ -25,25 +25,30 @@
 
 
 
-# # models.py
-# from django.db import models
+# models.py
+
+from django.db import models
 # from django.contrib.auth.models import User
+from account.models import User
+from questions.models import Book
 
-# class Payment(models.Model):
-#     STATUS_CHOICES = [
-#         ('PENDING', 'Pending'),
-#         ('SUCCESS', 'Success'),
-#         ('FAILED', 'Failed'),
-#     ]
+class Payment(models.Model):
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('SUCCESS', 'Success'),
+        ('FAILED', 'Failed'),
+    ]
 
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="payments")
-#     book = models.ForeignKey("Book", on_delete=models.CASCADE, related_name="payments")
-#     amount = models.DecimalField(max_digits=10, decimal_places=2)  # INR price
-#     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
-#     transaction_id = models.CharField(max_length=100, unique=True)
-#     razorpay_payment_id = models.CharField(max_length=100, blank=True, null=True)
-#     timestamp = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="payments")
+    books = models.ManyToManyField(Book, related_name="payments")
 
-#     def __str__(self):
-#         return f"{self.user.username} - {self.book.title} - {self.status}"
+    amount = models.DecimalField(max_digits=10, decimal_places=2)  # INR price
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
+    transaction_id = models.CharField(max_length=100, unique=True)
+    razorpay_payment_id = models.CharField(max_length=100, blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.status} - ₹{self.amount}"
+
 

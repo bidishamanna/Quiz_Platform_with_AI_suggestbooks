@@ -5,11 +5,13 @@
 
 {% block content %}
 {% include 'includes/navbar.html' %}
+
 <div class="container mt-5">
 
+  <!-- Profile Card -->
   <h2 class="text-center text-primary mb-4 fw-bold">My Profile</h2>
 
-  <div class="card shadow-lg border-primary">
+  <div class="card shadow-lg border-primary mb-5">
     <div class="card-header bg-primary text-white fw-bold">
       Profile Information
     </div>
@@ -57,22 +59,20 @@
         <div class="col-md-9">{{ profile.phone|default:"-" }}</div>
       </div>
 
-      <!-- Structured Address with Labels -->
-      <!-- Structured Address with Labels, Multi-line -->
+      <!-- Address -->
       <div class="row mb-3">
-          <div class="col-md-3 text-secondary fw-bold">Address:</div>
-          <div class="col-md-9">
-              {% if profile.village or profile.city or profile.state or profile.postal_code %}
-                  {% if profile.village %}Village: {{ profile.village }},{% endif %}<br>
-                  {% if profile.city %}City: {{ profile.city }},{% endif %}<br>
-                  {% if profile.state %}State: {{ profile.state }},{% endif %}<br>
-                  {% if profile.postal_code %}PIN: {{ profile.postal_code }}{% endif %}
-              {% else %}
-                  -
-              {% endif %}
-          </div>
+        <div class="col-md-3 text-secondary fw-bold">Address:</div>
+        <div class="col-md-9">
+          {% if profile.village or profile.city or profile.state or profile.postal_code %}
+              {% if profile.village %}Village: {{ profile.village }},{% endif %}<br>
+              {% if profile.city %}City: {{ profile.city }},{% endif %}<br>
+              {% if profile.state %}State: {{ profile.state }},{% endif %}<br>
+              {% if profile.postal_code %}PIN: {{ profile.postal_code }}{% endif %}
+          {% else %}
+              -
+          {% endif %}
+        </div>
       </div>
-
 
       <!-- Buttons -->
       <div class="d-flex justify-content-between mt-4">
@@ -86,5 +86,29 @@
 
     </div>
   </div>
+
+  <!-- Purchased Books Section -->
+  <h3 class="text-center text-primary mb-4 fw-bold">Purchased Books</h3>
+
+  {% if purchased_books %}
+    <div class="row">
+      {% for book in purchased_books %}
+        <div class="col-md-4 mb-3">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">{{ book.title }}</h5>
+              <p class="card-text">Price: ₹{{ book.price }}</p>
+              {% comment %} <p class="card-text">Author: {{ book.author }}</p> {% endcomment %}
+              <p class="card-text">Purchased on: {{ book.payment_date|date:"d M Y H:i" }}</p>
+              <p class="card-text">Transaction ID: {{ book.transaction_id }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center text-secondary">You haven’t purchased any books yet.</p>
+  {% endif %}
+
 </div>
 {% endblock %}

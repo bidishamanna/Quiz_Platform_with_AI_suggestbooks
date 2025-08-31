@@ -58,3 +58,4 @@ def get_books_from_ai(subject_name, max_books=5):
         books = []  # Fallback to empty list if something goes wrong
 
     return books
+
