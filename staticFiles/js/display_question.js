@@ -143,22 +143,16 @@ $(document).ready(function () {
     // ✅ Final Result
     function showFinalResult() {
     $.get(`/questions/result/${currentAttemptId}/`, function (data) {
-        // Calculate total wrong answers including unanswered ones
         const totalWrong = data.wrong + data.not_answered;
 
-        // Aggregate wrong answers by subject
         const wrongBySubject = data.wrong_by_subject.map(subject => ({
             ...subject,
-            totalWrongAnswers: subject.count  // Assuming 'count' is the number of wrong answers for that subject
+            totalWrongAnswers: subject.count
         }));
 
-        // Find the maximum wrong answer count across subjects
         const maxCount = Math.max(...wrongBySubject.map(subject => subject.totalWrongAnswers));
-
-        // Filter subjects with the maximum wrong answer count
         const topSubjects = wrongBySubject.filter(subject => subject.totalWrongAnswers === maxCount);
 
-        // Display quiz summary
         let html = `
             <div class="text-center text-white">
                 <h4 class="text-success">✅ Test Completed!</h4>
@@ -169,31 +163,42 @@ $(document).ready(function () {
                 <hr>
         `;
 
-        // If multiple subjects have the same number of wrong answers, show plural "Subjects"
         if (topSubjects.length > 1) {
             html += `<h5>📊 Weakest Subjects (${maxCount} wrong answers):</h5>`;
-            // Show all subjects with max wrong answers
             topSubjects.forEach(subject => {
                 html += `<p>${subject.question__subject__name} (${subject.totalWrongAnswers} wrong)</p>`;
             });
         } else {
-            // If only one subject has the highest wrong answers, show singular "Subject"
             html += `<h5>📊 Weakest Subject: ${topSubjects[0].question__subject__name} (${maxCount} wrong)</h5>`;
         }
 
-        html += `<div id="book-area" class="mt-4"></div>`; // Book suggestions will go here
+        // 🔗 Add a link that user must click to load book suggestions
+        html += `
+            <div class="mt-4">
+                <a href="#" id="loadBooksLink" class="btn btn-outline-warning">
+                    📚 Get Book Suggestions
+                </a>
+            </div>
+            <div id="book-area" class="mt-4"></div>
+        `;
+
         html += `</div>`;
         $('#quiz-area').html(html);
 
-        // Fetch book suggestions for each subject with max wrong answers
-        topSubjects.forEach(subject => {
-            const subjectName = subject.question__subject__name;
-            $.get(`/questions/books/suggest/?subject=${encodeURIComponent(subjectName)}`, function(bookHtml) {
-                const sectionHtml = `
-                    <h6 class="mt-4">📚 Suggested Books for <strong>${subjectName}</strong></h6>
-                    <div class="subject-book-table">${bookHtml}</div>
-                `;
-                $('#book-area').append(sectionHtml);
+        // ✅ When user clicks the link, fetch book suggestions
+        $('#loadBooksLink').on('click', function (e) {
+            e.preventDefault();
+            $('#book-area').html("<p class='text-info'>⏳ Fetching book suggestions...</p>");
+
+            topSubjects.forEach(subject => {
+                const subjectName = subject.question__subject__name;
+                $.get(`/questions/books/suggest/?subject=${encodeURIComponent(subjectName)}`, function (bookHtml) {
+                    const sectionHtml = `
+                        <h6 class="mt-4">📚 Suggested Books for <strong>${subjectName}</strong></h6>
+                        <div class="subject-book-table">${bookHtml}</div>
+                    `;
+                    $('#book-area').append(sectionHtml);
+                });
             });
         });
     });
