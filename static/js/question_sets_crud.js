@@ -6,12 +6,14 @@ $(document).ready(function () {
         event.preventDefault();
 
         const set_id = $("#set_id").val();
-        const set_name = $("#set_name").val();
+        const set_name = $("#set_name").val().trim();
         const category_id = $("#category").val();
+        const duration_minutes = $("#duration_minutes").val();
         const csrfToken = $("input[name=csrfmiddlewaretoken]").val();
 
-        if (!set_name || !category_id) {
-            $("#acknowledge").text("Set name and category are required.")
+        // Basic validation
+        if (!set_name || !category_id || !duration_minutes) {
+            $("#acknowledge").text("Set name, category, and duration are required.")
                 .css("color", "red").fadeIn().delay(2000).fadeOut();
             return;
         }
@@ -22,6 +24,7 @@ $(document).ready(function () {
             data: {
                 set_name: set_name,
                 category: category_id,
+                duration_minutes: duration_minutes,
                 csrfmiddlewaretoken: csrfToken
             },
             success: function (response) {
@@ -29,6 +32,7 @@ $(document).ready(function () {
                 $("#set_id").val("");
                 $("#set_name").val("");
                 $("#category").val("");
+                $("#duration_minutes").val("");
                 $("h3.text-primary").text("Set Register");
                 $("#set_register_btn").text("Save");
 
@@ -60,13 +64,15 @@ $(document).ready(function () {
             method: "POST",
             data: { csrfmiddlewaretoken: csrfToken },
             success: function (response) {
-                $("#acknowledge").text(response.message).css("color", "green").fadeIn().delay(2000).fadeOut();
+                $("#acknowledge").text(response.message)
+                    .css("color", "green").fadeIn().delay(2000).fadeOut();
                 $.get("/question_sets/get_rows/", function (data) {
                     $("#setList").html(data.html);
                 });
             },
             error: function (xhr) {
-                $("#acknowledge").text(xhr.responseJSON?.message || "Failed").css("color", "red").fadeIn().delay(2000).fadeOut();
+                $("#acknowledge").text(xhr.responseJSON?.message || "Failed")
+                    .css("color", "red").fadeIn().delay(2000).fadeOut();
             }
         });
     });
@@ -76,10 +82,12 @@ $(document).ready(function () {
         const setId = $(this).data("id");
         const setName = $(this).data("name");
         const categoryId = $(this).data("category");
+        const duration = $(this).data("duration"); // ✅ Added duration
 
         $("#set_id").val(setId);
         $("#set_name").val(setName);
         $("#category").val(categoryId);
+        $("#duration_minutes").val(duration); // ✅ Prefill duration
         $("h3.text-primary").text("Edit Set");
         $("#set_register_btn").text("Update");
     });
@@ -103,3 +111,4 @@ $(document).ready(function () {
         });
     });
 });
+

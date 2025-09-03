@@ -45,6 +45,8 @@ urlpatterns = [
     path("review/<int:attempt_id>/", views.review_attempt, name="review_attempt"),
 
     path('books/suggest/', views.suggest_books_for_subject, name='suggest_books_for_subject'),
+    path("books/page/", views.book_suggestions_page, name="book_suggestions_page"),
+
 
 
 ]

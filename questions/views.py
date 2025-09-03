@@ -369,11 +369,11 @@ def get_sets_by_category(request, category_id):
 from django.shortcuts import render, get_object_or_404
 # from .models import Set
 
-@jwt_required
-@role_required("student")
-def start_test(request, slug):
-    test_set = get_object_or_404(Set, slug=slug)
-    return render(request, "questions/start_test.html", {"set": test_set})
+# @jwt_required
+# @role_required("student")
+# def start_test(request, slug):
+#     test_set = get_object_or_404(Set, slug=slug)
+#     return render(request, "questions/start_test.html", {"set": test_set})
 
 
 # @jwt_required
@@ -695,22 +695,34 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.utils import timezone
 from django.db.models import Count
-from .models import Set, Question, Attempt, UserAnswer
+from question_sets.models import Set
+from questions.models import Question, Attempt, UserAnswer
 
 # from accounts.decorators import jwt_required, role_required
-
 
 @jwt_required
 @role_required("student")
 def start_test(request, slug):
-    """Load start test page"""
-    test_set = get_object_or_404(Set, slug=slug)
-    return render(request, "questions/start_test.html", {"set": test_set})
+    test_set = get_object_or_404(Set, slug=slug, delflag=False)
+
+    # Use the correct reverse name from related_name='questions'
+    questions_qs = test_set.questions.filter(delflag=False)
+
+    count = questions_qs.count()
+    # seconds per question = total seconds / number of questions
+    per_q_time = (test_set.duration_minutes * 60 // count) if count else 0
+
+    return render(request, "questions/start_test.html", {
+        "set": test_set,
+        "per_q_time": per_q_time,     # seconds per question
+        "total_duration": test_set.duration_minutes,  # whole set duration in minutes
+    })
+
 
 from django.utils import timezone
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from .models import Attempt, Set
+# from .models import Attempt, Set
 # from .decorators import jwt_required, role_required
 
 
@@ -718,6 +730,7 @@ from .models import Attempt, Set
 @role_required("student")
 def init_attempt(request, slug):
     """Start a new attempt or resume unfinished one"""
+    
     test_set = get_object_or_404(Set, slug=slug)
 
     attempt, created = Attempt.objects.get_or_create(
@@ -911,34 +924,34 @@ from django.shortcuts import render, get_object_or_404
 from questions.models import Book
 from django.http import HttpResponse
 from .utils import get_books_from_ai
-
+import re
 # from .utils import get_books_from_ai
+
 @jwt_required
 @role_required("student")
 def suggest_books_for_subject(request):
-    subject_name = request.GET.get('subject', '')
+    subject_name = request.GET.get('subject', '').strip()
     books = []
 
     if subject_name:
-        # Fetch books directly from Gemini AI
         ai_books = get_books_from_ai(subject_name)
-        for b in ai_books:
-            # Convert price from USD ($) to INR (₹)
-            try:
-                price_str = str(b["price"]).replace("$", "").strip()   # e.g. "$29.99" → "29.99"
-                usd_price = float(price_str)
-                inr_price = round(usd_price * 80, 2)   # Approx 1 USD = ₹80
-            except Exception:
-                inr_price = 0.0   # fallback if AI sends invalid price
 
-            # Save to DB if not already present
+        for b in ai_books:
+            try:
+                # Always sanitize price before saving
+                raw_price = str(b.get("price", 0))
+                clean_price = re.sub(r'[^\d.]', '', raw_price)  # remove $ ₹ or text
+                inr_price = float(clean_price) if clean_price else 0.0
+            except Exception:
+                inr_price = 0.0
+
             book, created = Book.objects.get_or_create(
                 title=b["title"],
                 subject=subject_name,
                 defaults={
-                    "price": inr_price,       # Save in INR
-                    "rating": b["rating"],
-                    "description": b["description"]
+                    "price": inr_price,  # stored clean INR number
+                    "rating": b.get("rating", 0),
+                    "description": b.get("description", "")
                 }
             )
             books.append(book)
@@ -979,3 +992,46 @@ def suggest_books_for_subject(request):
 #         books = []  # Return empty list instead of dummy data
 
 #     return books
+from django.shortcuts import render
+from django.http import HttpResponse
+from questions.models import Book
+
+@jwt_required
+@role_required("student")
+def book_suggestions_page(request):
+    subjects = request.GET.getlist("subjects")  # multiple weakest subjects
+    subject_books = {}
+
+    for subject_name in subjects:
+        books = suggest_books_for_subject_logic(subject_name)  # extract logic into helper
+        # Render partial for each subject
+        table_html = render(request, "partials/book_table.html", {"books": books}).content.decode("utf-8")
+        subject_books[subject_name] = table_html
+
+    return render(request, "questions/suggestions.html", {"subject_books": subject_books})
+
+
+# helper function (reuse your existing suggest_books_for_subject logic without request)
+def suggest_books_for_subject_logic(subject_name):
+    books = []
+    if subject_name:
+        ai_books = get_books_from_ai(subject_name)
+        for b in ai_books:
+            try:
+                price_str = str(b["price"]).replace("$", "").strip()
+                usd_price = float(price_str)
+                inr_price = round(usd_price * 80, 2)
+            except Exception:
+                inr_price = 0.0
+
+            book, created = Book.objects.get_or_create(
+                title=b["title"],
+                subject=subject_name,
+                defaults={
+                    "price": inr_price,
+                    "rating": b["rating"],
+                    "description": b["description"]
+                }
+            )
+            books.append(book)
+    return books

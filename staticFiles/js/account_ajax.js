@@ -1,7 +1,7 @@
 
 function validateRegistrationForm() {
-    const username = $("#username").val().trim();
-    const email = $("#email").val().trim();
+    const username = $("#username").val()
+    const email = $("#email").val()
     const password = $("#password").val();
     const confirmPassword = $("#confirm_password").val();
 

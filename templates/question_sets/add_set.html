@@ -31,6 +31,14 @@
             <div id="set_name_error" class="text-danger"></div>
         </div>
         <br>
+        <!-- ✅ New Duration Field -->
+        <div class="form-group">
+            <label for="duration_minutes">Duration (Minutes):</label>
+            <input type="number" class="form-control" id="duration_minutes" name="duration_minutes" min="1" required>
+            <small class="form-text text-muted">Example: 15 means the whole set must be finished in 15 minutes.</small>
+            <div id="duration_minutes_error" class="text-danger"></div>
+        </div>
+        <br>
 
         <button id="set_register_btn" class="btn btn-success">Save</button>
     </form>
@@ -48,6 +56,7 @@
             <tr>
                 <th>Set Name</th>
                 <th>Category Name</th>
+                <th>Duration</th> 
                 <th>Created By</th>
                 {% if user_role == 'staff' %}
                 <th>Edit</th>

@@ -12,6 +12,8 @@ class Set(models.Model):
 
     # ✅ Add random 3-digit slug
     slug = models.SlugField(unique=True, blank=True)
+    duration_minutes = models.PositiveIntegerField(default=0, help_text="Duration of the set in minutes")
+
 
     class Meta:
         unique_together = ("name", "category")
@@ -28,3 +30,4 @@ class Set(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.category.name})"
+

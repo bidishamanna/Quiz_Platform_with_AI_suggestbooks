@@ -6,7 +6,8 @@ $(document).ready(function () {
     let totalQuestions = 0;
     let userAnswers = [];
     let timer;
-    const QUESTION_TIME = 30;
+    let QUESTION_TIME = parseInt($("#per-question-time").val()) || 30;
+
 
     function startTimer() {
         let timeLeft = QUESTION_TIME;
@@ -173,14 +174,16 @@ $(document).ready(function () {
         }
 
         // 🔗 Add a link that user must click to load book suggestions
+                // 🔗 Add a link to open the book suggestions page
         html += `
             <div class="mt-4">
-                <a href="#" id="loadBooksLink" class="btn btn-outline-warning">
+                <a href="/questions/books/page/?${topSubjects.map(s => 'subjects=' + encodeURIComponent(s.question__subject__name)).join('&')}"
+                class="btn btn-outline-warning">
                     📚 Get Book Suggestions
                 </a>
             </div>
-            <div id="book-area" class="mt-4"></div>
         `;
+
 
         html += `</div>`;
         $('#quiz-area').html(html);

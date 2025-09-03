@@ -2,6 +2,7 @@
 <tr id="set-row-{{ set.id }}">
     <td>{{ set.name }}</td>
     <td>{{ set.category.name }}</td>
+    <td>{{ set.duration_minutes }} min</td> <!-- ✅ Show duration -->
     <td>{{ set.user.username }}</td>
 
     {% if user_role == 'staff' and set.user == user %}
@@ -10,7 +11,8 @@
                     class="btn btn-warning btn-sm edit-set"
                     data-id="{{ set.id }}"
                     data-name="{{ set.name }}"
-                    data-category="{{ set.category.id }}">
+                    data-category="{{ set.category.id }}"
+                    data-duration="{{ set.duration_minutes }}"> <!-- ✅ Pass duration -->
                 Edit
             </button>
         </td>
@@ -31,3 +33,7 @@
     <td colspan="5" class="text-center text-muted">No sets available</td>
 </tr>
 {% endfor %}
+
+
+
+
